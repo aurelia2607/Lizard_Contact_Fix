@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.lizardcontact.controller.MainController"
+            style="-fx-background-color:#d4d0c8;-fx-font-family:Tahoma;">
+
+    <top>
+        <HBox style="-fx-background-color:#000080;-fx-padding:3 6;">
+            <Label text="Lizard Contact"
+                   style="-fx-text-fill:white;-fx-font-weight:bold;-fx-font-size:11;"/>
+        </HBox>
+    </top>
+
+    <left>
+        <VBox prefWidth="155" spacing="0"
+              style="-fx-background-color:#d4d0c8;-fx-border-color:transparent #808080 transparent transparent;-fx-border-width:0 1 0 0;">
+
+            <Label text="MENU"
+                   style="-fx-font-size:10;-fx-font-weight:bold;-fx-text-fill:#444;-fx-padding:10 8 4 8;"/>
+
+            <Button fx:id="btnDashboard" text="Dashboard"
+                    maxWidth="Infinity"
+                    style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
+            <Button fx:id="btnKontak" text="Daftar Kontak"
+                    maxWidth="Infinity"
+                    style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
+            <Button fx:id="btnFavorit" text="Favorit"
+                    maxWidth="Infinity"
+                    style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
+            <Button fx:id="btnStatistik" text="Statistik"
+                    maxWidth="Infinity"
+                    style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
+            <Button fx:id="btnRiwayat" text="Riwayat"
+                    maxWidth="Infinity"
+                    style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Separator/>
+            <VBox style="-fx-padding:6 8;">
+                <Button text="Keluar"
+                        maxWidth="Infinity"
+                        style="-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;-fx-border-width:2;-fx-padding:5 12;-fx-font-size:12;-fx-cursor:hand;"/>
+            </VBox>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea"
+                   style="-fx-background-color:#d4d0c8;"/>
+    </center>
+
+</BorderPane>
