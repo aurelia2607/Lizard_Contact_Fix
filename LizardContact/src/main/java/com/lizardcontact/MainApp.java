@@ -1,17 +1,43 @@
 package com.lizardcontact;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class MainApp {
-    static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        IO.println(String.format("Hello and welcome!"));
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            IO.println("i = " + i);
-        }
+public class MainApp extends Application {
+
+    private static Stage primaryStage;
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        primaryStage = stage;
+        stage.setTitle("Lizard Contact");
+        stage.setResizable(true);
+        showLogin();
+        stage.show();
     }
+
+    public static void showLogin() throws Exception {
+        Parent root = FXMLLoader.load(MainApp.class.getResource("/com/lizardcontact/fxml/Login.fxml"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setWidth(430);
+        primaryStage.setHeight(360);
+        primaryStage.setResizable(false);
+        primaryStage.centerOnScreen();
+    }
+
+    public static void showMain() throws Exception {
+        Parent root = FXMLLoader.load(MainApp.class.getResource("/com/lizardcontact/fxml/Main.fxml"));
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setWidth(920);
+        primaryStage.setHeight(660);
+        primaryStage.setResizable(true);
+        primaryStage.centerOnScreen();
+    }
+
+    public static Stage getPrimaryStage() { return primaryStage; }
+
+    public static void main(String[] args) { launch(args); }
 }
