@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.lizardcontact.controller.StatistikController"
+      style="-fx-background-color:#d4d0c8;-fx-font-family:Tahoma;" spacing="0">
+
+    <HBox style="-fx-padding:6 8;-fx-border-color:transparent transparent #808080 transparent;-fx-border-width:0 0 1 0;" alignment="CENTER_LEFT">
+        <Label text="Statistik Kontak" style="-fx-font-size:14;-fx-font-weight:bold;"/>
+    </HBox>
+
+    <!-- Summary cards -->
+    <HBox spacing="6" style="-fx-padding:8 8 6 8;">
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="2"
+              style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:5 8;">
+            <Label text="Total" style="-fx-font-size:10;"/>
+            <Label fx:id="totalLabel" text="0" style="-fx-font-size:18;-fx-font-weight:bold;"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="2"
+              style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:5 8;">
+            <Label text="Terbanyak" style="-fx-font-size:10;"/>
+            <Label fx:id="topLabel" text="-" style="-fx-font-size:14;-fx-font-weight:bold;"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="2"
+              style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:5 8;">
+            <Label text="Rata-rata" style="-fx-font-size:10;"/>
+            <Label fx:id="avgLabel" text="0" style="-fx-font-size:18;-fx-font-weight:bold;"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="2"
+              style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:5 8;">
+            <Label text="Bulan Ini" style="-fx-font-size:10;"/>
+            <Label fx:id="bulanLabel" text="0" style="-fx-font-size:18;-fx-font-weight:bold;"/>
+        </VBox>
+        <VBox HBox.hgrow="ALWAYS" alignment="CENTER" spacing="2"
+              style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:5 8;">
+            <Label text="P vs B" style="-fx-font-size:10;"/>
+            <Label fx:id="pvbLabel" text="0:0" style="-fx-font-size:14;-fx-font-weight:bold;"/>
+        </VBox>
+    </HBox>
+
+    <!-- Tab chart -->
+    <TabPane fx:id="chartTab" VBox.vgrow="ALWAYS" style="-fx-background-color:#d4d0c8;" tabClosingPolicy="UNAVAILABLE">
+        <VBox.margin><Insets left="8" right="8"/></VBox.margin>
+        <Tab text="PieChart">
+            <HBox spacing="8" style="-fx-padding:8;-fx-background-color:#d4d0c8;">
+                <PieChart fx:id="pieChart" HBox.hgrow="ALWAYS" legendVisible="true" labelsVisible="true" prefHeight="220"/>
+            </HBox>
+        </Tab>
+        <Tab text="BarChart">
+            <BarChart fx:id="barChart" style="-fx-background-color:#d4d0c8;" prefHeight="220">
+                <xAxis><CategoryAxis label="Kategori"/></xAxis>
+                <yAxis><NumberAxis label="Jumlah"/></yAxis>
+            </BarChart>
+        </Tab>
+    </TabPane>
+
+    <!-- Rincian table -->
+    <VBox style="-fx-padding:0 8 8 8;" spacing="4">
+        <Label text="Rincian per Kategori:" style="-fx-font-size:11;-fx-font-weight:bold;"/>
+        <TableView fx:id="rincianTable" prefHeight="150"
+                   style="-fx-font-size:11;-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;">
+            <columns>
+                <TableColumn fx:id="colKat" text="Kategori"   prefWidth="120"/>
+                <TableColumn fx:id="colJml" text="Jumlah"     prefWidth="80"/>
+                <TableColumn fx:id="colPct" text="Persentase" prefWidth="100"/>
+                <TableColumn fx:id="colBar" text="Proporsi"   prefWidth="9999"/>
+            </columns>
+            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+        </TableView>
+    </VBox>
+</VBox>
