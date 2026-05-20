@@ -21,19 +21,19 @@
             <Label text="MENU"
                    style="-fx-font-size:10;-fx-font-weight:bold;-fx-text-fill:#444;-fx-padding:10 8 4 8;"/>
 
-            <Button fx:id="btnDashboard" text="Dashboard"
+            <Button fx:id="btnDashboard" text="Dashboard" onAction="#showDashboard"
                     maxWidth="Infinity"
                     style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
-            <Button fx:id="btnKontak" text="Daftar Kontak"
+            <Button fx:id="btnKontak" text="Daftar Kontak" onAction="#showKontak"
                     maxWidth="Infinity"
                     style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
-            <Button fx:id="btnFavorit" text="Favorit"
+            <Button fx:id="btnFavorit" text="Favorit" onAction="#showFavorit"
                     maxWidth="Infinity"
                     style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
-            <Button fx:id="btnStatistik" text="Statistik"
+            <Button fx:id="btnStatistik" text="Statistik" onAction="#showStatistik"
                     maxWidth="Infinity"
                     style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
-            <Button fx:id="btnRiwayat" text="Riwayat"
+            <Button fx:id="btnRiwayat" text="Riwayat" onAction="#showRiwayat"
                     maxWidth="Infinity"
                     style="-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"/>
 
@@ -41,7 +41,7 @@
 
             <Separator/>
             <VBox style="-fx-padding:6 8;">
-                <Button text="Keluar"
+                <Button text="Keluar" onAction="#logout"
                         maxWidth="Infinity"
                         style="-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;-fx-border-width:2;-fx-padding:5 12;-fx-font-size:12;-fx-cursor:hand;"/>
             </VBox>
