@@ -2,7 +2,6 @@ package com.lizardcontact.model;
 
 import com.lizardcontact.database.DatabaseHelper;
 import com.lizardcontact.util.SessionManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
