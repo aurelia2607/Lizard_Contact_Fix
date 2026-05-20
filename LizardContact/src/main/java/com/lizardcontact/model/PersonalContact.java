@@ -2,7 +2,7 @@ package com.lizardcontact.model;
 
 import java.time.LocalDate;
 
-public class PersonalContact {
+public class PersonalContact extends Contact {
     private String nickname;
     private LocalDate birthdate;
     private String relationship;
