@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.lizardcontact.controller.RiwayatController"
+      style="-fx-background-color:#d4d0c8;-fx-font-family:Tahoma;" spacing="0">
+
+    <!-- Header -->
+    <VBox style="-fx-background-color:#d4d0c8;-fx-border-color:transparent transparent #808080 transparent;-fx-border-width:0 0 1 0;-fx-padding:6 8 4 8;" spacing="2">
+        <Label text="Riwayat Aktivitas" style="-fx-font-size:13;-fx-font-weight:bold;"/>
+    </VBox>
+
+    <!-- Filter row 1: Filter Aksi + date range + tombol -->
+    <HBox spacing="6" alignment="CENTER_LEFT"
+          style="-fx-padding:6 8 2 8;-fx-background-color:#d4d0c8;">
+        <Label text="Filter Aksi:" style="-fx-font-size:11;"/>
+        <ComboBox fx:id="filterAksi" prefWidth="110" prefHeight="22" style="-fx-font-size:11;"/>
+        <Label text="Dari:" style="-fx-font-size:11;"/>
+        <DatePicker fx:id="fromDate" prefWidth="135" prefHeight="22" style="-fx-font-size:11;" promptText="DD/MM/YYYY"/>
+        <Label text="Sampai:" style="-fx-font-size:11;"/>
+        <DatePicker fx:id="toDate" prefWidth="135" prefHeight="22" style="-fx-font-size:11;" promptText="DD/MM/YYYY"/>
+        <Button text="Filter" onAction="#doFilter" prefWidth="60" prefHeight="22"
+                style="-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;-fx-border-width:2;-fx-font-size:11;-fx-cursor:hand;"/>
+        <Button text="Reset" onAction="#resetFilter" prefWidth="60" prefHeight="22"
+                style="-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;-fx-border-width:2;-fx-font-size:11;-fx-cursor:hand;"/>
+    </HBox>
+
+    <!-- Filter row 2: Hapus semua log -->
+    <HBox style="-fx-padding:2 8 6 8;-fx-background-color:#d4d0c8;-fx-border-color:transparent transparent #808080 transparent;-fx-border-width:0 0 1 0;">
+        <Button text="Hapus Semua Log" onAction="#hapusLog" prefHeight="22"
+                style="-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;-fx-border-width:2;-fx-font-size:11;-fx-cursor:hand;"/>
+    </HBox>
+
+    <!-- Table -->
+    <TableView fx:id="logTable" VBox.vgrow="ALWAYS"
+               style="-fx-font-size:11;-fx-background-color:white;" editable="false">
+        <VBox.margin><Insets top="6" left="8" right="8" bottom="0"/></VBox.margin>
+        <columns>
+            <TableColumn fx:id="colNo"    text="No"          prefWidth="40"/>
+            <TableColumn fx:id="colWaktu" text="Waktu"       prefWidth="140"/>
+            <TableColumn fx:id="colAksi"  text="Aksi"        prefWidth="85"/>
+            <TableColumn fx:id="colNama"  text="Nama Kontak" prefWidth="160"/>
+            <TableColumn fx:id="colKet"   text="Keterangan"  prefWidth="9999"/>
+        </columns>
+        <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+    </TableView>
+
+    <!-- Footer -->
+    <HBox style="-fx-background-color:#d4d0c8;-fx-border-color:#808080 transparent transparent transparent;-fx-border-width:1 0 0 0;-fx-padding:4 8;" alignment="CENTER_LEFT" spacing="10">
+        <Label fx:id="totalLogLabel" text="Total log: 0" style="-fx-font-size:11;" HBox.hgrow="ALWAYS"/>
+        <Label fx:id="summaryLabel" text="Tambah: 0 | Edit: 0 | Hapus: 0 | Favorit: 0" style="-fx-font-size:11;-fx-font-weight:bold;"/>
+    </HBox>
+</VBox>
