@@ -54,7 +54,18 @@ public class MainController {
         this.loadPage("/com/lizardcontact/fxml/Dashboard.fxml");
         this.setActive(this.btnDashboard);
     }
-
+    @FXML public void showKontak()    {
+        this.loadPage("/com/lizardcontact/fxml/Kontak.fxml");
+        this.setActive(btnKontak);
+    }
+    @FXML public void showFavorit()   {
+        this.loadPage("/com/lizardcontact/fxml/Favorit.fxml");
+        this.setActive(btnFavorit);
+    }
+    @FXML public void showStatistik() {
+        this.loadPage("/com/lizardcontact/fxml/Statistik.fxml");
+        this.setActive(btnStatistik);
+    }
     @FXML
     public void showRiwayat() {
         this.loadPage("/com/lizardcontact/fxml/Riwayat.fxml");
