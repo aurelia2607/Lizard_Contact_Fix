@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.lizardcontact.controller.LoginController"
+      prefWidth="420" prefHeight="340"
+      style="-fx-background-color: #d4d0c8; -fx-font-family: 'Tahoma';">
+
+    <!-- Fake title bar -->
+    <HBox style="-fx-background-color: #000080; -fx-padding: 3 6;">
+        <Label text="Lizard Contact - Login"
+               style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
+    </HBox>
+
+    <!-- Header -->
+    <VBox alignment="CENTER" spacing="3" style="-fx-padding: 18 0 10 0;">
+        <Label text="LIZARD CONTACT"
+               style="-fx-font-size: 15; -fx-font-weight: bold;"/>
+        <Label text="Aplikasi Manajemen Kontak"
+               style="-fx-font-size: 11; -fx-text-fill: #444444;"/>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Form -->
+    <VBox spacing="6" style="-fx-padding: 18 50 8 50;">
+        <Label text="Username:" style="-fx-font-size: 12;"/>
+        <TextField fx:id="usernameField" promptText="Masukkan username"
+                   style="-fx-background-color: white; -fx-border-color: #808080 #ffffff #ffffff #808080; -fx-border-width: 1; -fx-padding: 3 5; -fx-font-size: 12;"
+                   prefHeight="24"/>
+
+        <Label text="Password:" style="-fx-font-size: 12;"/>
+        <HBox spacing="4" alignment="CENTER_LEFT">
+            <PasswordField fx:id="passwordField" promptText="Masukkan password"
+                           style="-fx-background-color: white; -fx-border-color: #808080 #ffffff #ffffff #808080; -fx-border-width: 1; -fx-padding: 3 5; -fx-font-size: 12;"
+                           prefHeight="24" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="passwordVisible" promptText="Masukkan password"
+                       style="-fx-background-color: white; -fx-border-color: #808080 #ffffff #ffffff #808080; -fx-border-width: 1; -fx-padding: 3 5; -fx-font-size: 12;"
+                       prefHeight="24" HBox.hgrow="ALWAYS" visible="false" managed="false"/>
+            <Button fx:id="toggleBtn" text="Lihat" onAction="#togglePassword" prefWidth="52" prefHeight="24"
+                    style="-fx-background-color: #d4d0c8; -fx-border-color: #ffffff #808080 #808080 #ffffff; -fx-border-width: 2; -fx-font-size: 11; -fx-cursor: hand;"/>
+        </HBox>
+
+        <Label fx:id="errorLabel" text="" wrapText="true"
+               style="-fx-text-fill: red; -fx-font-size: 11;" minHeight="16"/>
+    </VBox>
+
+    <Separator/>
+
+    <!-- Buttons -->
+    <HBox spacing="10" alignment="CENTER" style="-fx-padding: 14 0 14 0;">
+        <Button text="Masuk" onAction="#login" prefWidth="90" prefHeight="26"
+                style="-fx-background-color: #d4d0c8; -fx-border-color: #ffffff #808080 #808080 #ffffff; -fx-border-width: 2; -fx-font-size: 12; -fx-cursor: hand;"/>
+        <Button text="Daftar" onAction="#showRegister" prefWidth="90" prefHeight="26"
+                style="-fx-background-color: #d4d0c8; -fx-border-color: #ffffff #808080 #808080 #ffffff; -fx-border-width: 2; -fx-font-size: 12; -fx-cursor: hand;"/>
+    </HBox>
+</VBox>

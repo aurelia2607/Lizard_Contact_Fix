@@ -98,11 +98,9 @@ public class DatabaseHelper {
 
     private void insertSampleData() {
         try {
-            // Check if data exists
             ResultSet rs = connection.createStatement().executeQuery("SELECT COUNT(*) FROM users");
             if (rs.next() && rs.getInt(1) > 0) return;
 
-            // Insert default user
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO users (username, passwordHash, email) VALUES (?, ?, ?)",
                     Statement.RETURN_GENERATED_KEYS);
@@ -113,7 +111,6 @@ public class DatabaseHelper {
             ResultSet genKeys = ps.getGeneratedKeys();
             int uid = genKeys.next() ? genKeys.getInt(1) : 1;
 
-            // Sample contacts
             String[][] contacts = {
                     {"Personal","Budi Santoso","081234567890","budi@email.com","Jl. Mawar 1","Teman","0"},
                     {"Bisnis","PT. Maju Bersama","0211234567","info@maju.co.id","Jl. Sudirman 10","Kolega","0"},
@@ -165,7 +162,6 @@ public class DatabaseHelper {
                 }
             }
 
-            // Sample activity logs
             String[][] logs = {
                     {"TAMBAH","Rina Wijaya","Kontak personal baru ditambahkan"},
                     {"EDIT","Budi Santoso","Nomor telepon diperbarui"},
@@ -201,7 +197,6 @@ public class DatabaseHelper {
         }
     }
 
-    // --- USER ---
     public User login(String username, String password) {
         try {
             PreparedStatement ps = connection.prepareStatement(
@@ -232,7 +227,6 @@ public class DatabaseHelper {
         } catch (SQLException e) { return false; }
     }
 
-    // --- CONTACTS ---
     public List<Contact> getAllContacts(int userID) {
         List<Contact> list = new ArrayList<>();
         try {
@@ -389,7 +383,6 @@ public class DatabaseHelper {
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
-    // --- STATISTICS ---
     public ContactStatistics getStatistics(int userID) {
         ContactStatistics stats = new ContactStatistics();
         try {
@@ -433,7 +426,6 @@ public class DatabaseHelper {
         return stats;
     }
 
-    // --- ACTIVITY LOGS ---
     public void addLog(int userID, String action, String contactName, String description) {
         try {
             PreparedStatement ps = connection.prepareStatement(
