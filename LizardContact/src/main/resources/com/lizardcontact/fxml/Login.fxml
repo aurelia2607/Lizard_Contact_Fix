@@ -8,13 +8,11 @@
       prefWidth="420" prefHeight="340"
       style="-fx-background-color: #d4d0c8; -fx-font-family: 'Tahoma';">
 
-    <!-- Fake title bar -->
     <HBox style="-fx-background-color: #000080; -fx-padding: 3 6;">
         <Label text="Lizard Contact - Login"
                style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 11;"/>
     </HBox>
 
-    <!-- Header -->
     <VBox alignment="CENTER" spacing="3" style="-fx-padding: 18 0 10 0;">
         <Label text="LIZARD CONTACT"
                style="-fx-font-size: 15; -fx-font-weight: bold;"/>
@@ -24,7 +22,6 @@
 
     <Separator/>
 
-    <!-- Form -->
     <VBox spacing="6" style="-fx-padding: 18 50 8 50;">
         <Label text="Username:" style="-fx-font-size: 12;"/>
         <TextField fx:id="usernameField" promptText="Masukkan username"
@@ -49,7 +46,6 @@
 
     <Separator/>
 
-    <!-- Buttons -->
     <HBox spacing="10" alignment="CENTER" style="-fx-padding: 14 0 14 0;">
         <Button text="Masuk" onAction="#login" prefWidth="90" prefHeight="26"
                 style="-fx-background-color: #d4d0c8; -fx-border-color: #ffffff #808080 #808080 #ffffff; -fx-border-width: 2; -fx-font-size: 12; -fx-cursor: hand;"/>

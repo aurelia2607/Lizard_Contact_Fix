@@ -84,7 +84,6 @@ public class KontakController {
                     setGraphic(null); return;
                 }
                 Contact c = getTableView().getItems().get(getIndex());
-                // ★ filled jika favorit, ☆ kosong jika bukan
                 favBtn.setText(c.isFavorite() ? "★" : "☆");
                 favBtn.setStyle(BTN + (c.isFavorite()
                     ? "-fx-text-fill:black;-fx-font-size:13;"

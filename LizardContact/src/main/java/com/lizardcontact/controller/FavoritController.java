@@ -57,7 +57,6 @@ public class FavoritController {
         colTipe.setCellValueFactory(d ->
             new SimpleStringProperty(nvl(d.getValue().getContactType())));
 
-        // Cuma Edit + Hapus (hapus dari favorit)
         colAksi.setCellFactory(col -> new TableCell<>() {
             final Button editBtn  = new Button("Edit");
             final Button hapusBtn = new Button("Hapus ★");

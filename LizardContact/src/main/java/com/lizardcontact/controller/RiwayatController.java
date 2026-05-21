@@ -60,11 +60,6 @@ public class RiwayatController {
                 String action = log.getAction();
                 lbl.setText("[" + action + "]");
 
-                // Sesuai screenshot persis:
-                // TAMBAH  = hijau  #4a7c4e
-                // EDIT    = navy   #1a237e
-                // FAVORIT = olive  #827717
-                // HAPUS   = merah  #7b1a1a
                 String bg;
                 switch (action) {
                     case "TAMBAH"  -> bg = "#4a7c4e";

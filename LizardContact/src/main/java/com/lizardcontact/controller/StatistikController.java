@@ -62,8 +62,7 @@ public class StatistikController {
                 Map.Entry<String,Integer> e = getTableView().getItems().get(getIndex());
                 double ratio = total == 0 ? 0 : (double)e.getValue() / total;
 
-                // Total lebar container ikut kolom, bar navy isi ratio, sisa light gray
-                double totalW = colBar.getWidth() - 12; // sedikit margin
+                double totalW = colBar.getWidth() - 12;
                 if (totalW < 10) totalW = 150;
                 double navyW = ratio * totalW;
                 double grayW = totalW - navyW;
@@ -72,8 +71,7 @@ public class StatistikController {
                 navyBar.setPrefWidth(navyW);
                 navyBar.setPrefHeight(12);
                 navyBar.setMinWidth(navyW);
-                navyBar.setStyle("-fx-background-color:#1a237e;"); // navy sesuai screenshot
-
+                navyBar.setStyle("-fx-background-color:#1a237e;");
                 Region grayBar = new Region();
                 grayBar.setPrefWidth(grayW);
                 grayBar.setPrefHeight(12);
@@ -86,7 +84,6 @@ public class StatistikController {
             }
         });
 
-        // Re-render bar when column width changes
         colBar.widthProperty().addListener((obs, o, n) -> rincianTable.refresh());
 
         if (dist != null) rincianTable.getItems().setAll(dist.entrySet());

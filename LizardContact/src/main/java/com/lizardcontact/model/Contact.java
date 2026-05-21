@@ -27,7 +27,6 @@ public abstract class Contact {
 
     public abstract String getDisplayInfo();
 
-    // Getters & Setters
     public int getContactID() { return contactID; }
     public void setContactID(int id) { this.contactID = id; }
     public String getContactType() { return contactType; }

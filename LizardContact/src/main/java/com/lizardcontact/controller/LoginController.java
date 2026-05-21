@@ -53,7 +53,6 @@ public class LoginController {
                 MainApp.showMain();
             } catch (Exception e) {
                 e.printStackTrace();
-                // Tampilkan pesan error yang lebih detail
                 String msg = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
                 if (e.getCause() != null && e.getCause().getMessage() != null)
                     msg = e.getCause().getMessage();

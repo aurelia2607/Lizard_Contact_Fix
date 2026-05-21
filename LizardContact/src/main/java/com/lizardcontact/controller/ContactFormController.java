@@ -15,7 +15,6 @@ public class ContactFormController {
     @FXML private RadioButton rbBisnis;
     @FXML private ToggleGroup tipeGroup;
 
-    // Common fields
     @FXML private TextField nameField;
     @FXML private TextField phoneField;
     @FXML private TextField emailField;
@@ -23,13 +22,11 @@ public class ContactFormController {
     @FXML private ComboBox<String> kategoriBox;
     @FXML private CheckBox favCheck;
 
-    // Personal fields
     @FXML private VBox personalSection;
     @FXML private TextField nicknameField;
     @FXML private DatePicker birthdatePicker;
     @FXML private ComboBox<String> relasiBox;
 
-    // Business fields
     @FXML private VBox bisnisSection;
     @FXML private TextField companyField;
     @FXML private TextField jobTitleField;
@@ -47,7 +44,6 @@ public class ContactFormController {
         relasiBox.getItems().addAll("Ayah", "Ibu", "Saudara", "Pasangan", "Sahabat", "Teman", "Lainnya");
         relasiBox.setValue("Teman");
 
-        // Toggle personal/bisnis sections
         tipeGroup.selectedToggleProperty().addListener((obs, old, nw) -> {
             boolean isPersonal = rbPersonal.isSelected();
             personalSection.setVisible(isPersonal);
@@ -96,7 +92,6 @@ public class ContactFormController {
         ContactManager cm = MainController.getContactManager();
 
         if (editContact != null) {
-            // Update existing
             editContact.setName(name);
             editContact.setPhoneNumber(phone);
             editContact.setEmail(emailField.getText().trim());
@@ -115,7 +110,6 @@ public class ContactFormController {
             }
             cm.updateContact(editContact);
         } else {
-            // Create new
             Contact newContact;
             if (rbPersonal.isSelected()) {
                 PersonalContact pc = new PersonalContact();
