@@ -4,6 +4,7 @@ import com.lizardcontact.model.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.time.LocalDate;
@@ -16,6 +17,10 @@ public class ContactFormController {
     @FXML private ToggleGroup tipeGroup;
 
     @FXML private TextField nameField;
+    @FXML private ComboBox<String> kodeNegaraBox;
+    @FXML private RadioButton rbHP;
+    @FXML private RadioButton rbLokal;
+    @FXML private ToggleGroup phoneTypeGroup;
     @FXML private TextField phoneField;
     @FXML private TextField emailField;
     @FXML private TextField addressField;
@@ -44,6 +49,29 @@ public class ContactFormController {
         relasiBox.getItems().addAll("Ayah", "Ibu", "Saudara", "Pasangan", "Sahabat", "Teman", "Lainnya");
         relasiBox.setValue("Teman");
 
+        kodeNegaraBox.getItems().addAll(
+                "+62 (Indonesia)",
+                "+1 (USA)",
+                "+60 (Malaysia)",
+                "+65 (Singapura)",
+                "+81 (Jepang)",
+                "+82 (Korea)",
+                "+86 (Tiongkok)",
+                "+91 (India)",
+                "+44 (Inggris)",
+                "+61 (Australia)"
+        );
+        kodeNegaraBox.setValue("+62 (Indonesia)");
+
+        phoneTypeGroup.selectedToggleProperty().addListener((obs, old, nw) -> {
+            if (rbHP.isSelected()) {
+                phoneField.setPromptText("81234567890");
+            } else {
+                phoneField.setPromptText("211234567");
+            }
+            phoneField.clear();
+        });
+
         tipeGroup.selectedToggleProperty().addListener((obs, old, nw) -> {
             boolean isPersonal = rbPersonal.isSelected();
             personalSection.setVisible(isPersonal);
@@ -53,12 +81,50 @@ public class ContactFormController {
         });
     }
 
+    private String getKodeNegara() {
+        String selected = kodeNegaraBox.getValue();
+        if (selected == null) return "+62";
+        return selected.split(" ")[0];
+    }
+
     public void setContact(Contact c) {
         this.editContact = c;
         formTitle.setText("Edit Kontak");
 
         nameField.setText(c.getName());
-        phoneField.setText(c.getPhoneNumber());
+
+        String fullPhone = c.getPhoneNumber() != null ? c.getPhoneNumber() : "";
+        if (fullPhone.startsWith("+")) {
+            int spaceIdx = fullPhone.indexOf(' ');
+            if (spaceIdx > 0) {
+                String kode = fullPhone.substring(0, spaceIdx);
+                String nomor = fullPhone.substring(spaceIdx + 1);
+                for (String item : kodeNegaraBox.getItems()) {
+                    if (item.startsWith(kode + " ")) {
+                        kodeNegaraBox.setValue(item);
+                        break;
+                    }
+                }
+                if (nomor.startsWith("8") || nomor.startsWith("08")) {
+                    rbHP.setSelected(true);
+                } else {
+                    rbLokal.setSelected(true);
+                }
+                phoneField.setText(nomor);
+            } else {
+                phoneField.setText(fullPhone);
+            }
+        } else {
+            if (fullPhone.startsWith("08")) {
+                rbHP.setSelected(true);
+                phoneField.setText(fullPhone.substring(1));
+            } else if (fullPhone.startsWith("0")) {
+                rbLokal.setSelected(true);
+                phoneField.setText(fullPhone.substring(1));
+            } else {
+                phoneField.setText(fullPhone);
+            }
+        }
         emailField.setText(c.getEmail() != null ? c.getEmail() : "");
         addressField.setText(c.getAddress() != null ? c.getAddress() : "");
         kategoriBox.setValue(c.getCategory());
@@ -84,10 +150,40 @@ public class ContactFormController {
     @FXML
     private void save() {
         String name = nameField.getText().trim();
-        String phone = phoneField.getText().trim();
+        String phoneInput = phoneField.getText().trim();
+        String kodeNegara = getKodeNegara();
+        boolean isHP = rbHP.isSelected();
 
         if (name.isEmpty()) { errorLabel.setText("Nama wajib diisi!"); return; }
-        if (phone.isEmpty()) { errorLabel.setText("Nomor telepon wajib diisi!"); return; }
+        if (phoneInput.isEmpty()) { errorLabel.setText("Nomor telepon wajib diisi!"); return; }
+        if (!phoneInput.matches("\\d+")) {
+            errorLabel.setText("Nomor telepon hanya boleh berisi angka!");
+            return;
+        }
+
+        if (isHP) {
+            if (phoneInput.length() < 9 || phoneInput.length() > 12) {
+                errorLabel.setText("Nomor HP harus 9-12 digit tanpa angka 0 di depan! (contoh: 81234567890)");
+                return;
+            }
+            if (!phoneInput.startsWith("8")) {
+                errorLabel.setText("Nomor HP harus diawali angka 8! (contoh: 81234567890)");
+                return;
+            }
+        } else {
+            if (phoneInput.length() < 6 || phoneInput.length() > 11) {
+                errorLabel.setText("Nomor telepon lokal harus 6-11 digit! (contoh: 211234567)");
+                return;
+            }
+        }
+
+        String phone = kodeNegara + " " + phoneInput;
+
+        String email = emailField.getText().trim();
+        if (!email.isEmpty() && !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+            errorLabel.setText("Format email tidak valid!");
+            return;
+        }
 
         ContactManager cm = MainController.getContactManager();
 

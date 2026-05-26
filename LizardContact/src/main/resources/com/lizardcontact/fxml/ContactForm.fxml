@@ -36,8 +36,15 @@
                 <TextField fx:id="nameField" promptText="cth: Budi Santoso"
                            style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:2 4;-fx-font-size:11;" prefHeight="22"/>
                 <Label text="Nomor Telepon *" style="-fx-font-size:11;"/>
-                <TextField fx:id="phoneField" promptText="081234567890"
-                           style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:2 4;-fx-font-size:11;" prefHeight="22"/>
+                <HBox spacing="6" alignment="CENTER_LEFT">
+                    <ComboBox fx:id="kodeNegaraBox" prefHeight="22" prefWidth="90" style="-fx-font-size:11;"/>
+                    <RadioButton fx:id="rbHP" text="HP" style="-fx-font-size:11;" selected="true">
+                        <toggleGroup><ToggleGroup fx:id="phoneTypeGroup"/></toggleGroup>
+                    </RadioButton>
+                    <RadioButton fx:id="rbLokal" text="Lokal" style="-fx-font-size:11;" toggleGroup="$phoneTypeGroup"/>
+                    <TextField fx:id="phoneField" promptText="81234567890" HBox.hgrow="ALWAYS"
+                               style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:2 4;-fx-font-size:11;" prefHeight="22"/>
+                </HBox>
                 <Label text="Email" style="-fx-font-size:11;"/>
                 <TextField fx:id="emailField" promptText="budi@email.com"
                            style="-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;-fx-padding:2 4;-fx-font-size:11;" prefHeight="22"/>
