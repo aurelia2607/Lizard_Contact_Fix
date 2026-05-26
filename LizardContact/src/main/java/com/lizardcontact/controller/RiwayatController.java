@@ -58,7 +58,7 @@ public class RiwayatController {
                 }
                 ActivityLog log = getTableView().getItems().get(getIndex());
                 String action = log.getAction();
-                lbl.setText("[" + action + "]");
+                lbl.setText(action);
 
                 String bg;
                 switch (action) {
