@@ -57,14 +57,17 @@
     <VBox style="-fx-padding:0 8 8 8;" spacing="4">
         <Label text="Rincian per Kategori:" style="-fx-font-size:11;-fx-font-weight:bold;"/>
         <TableView fx:id="rincianTable" prefHeight="150"
+                   maxWidth="1.7976931348623157E308"
                    style="-fx-font-size:11;-fx-background-color:white;-fx-border-color:#808080 #ffffff #ffffff #808080;-fx-border-width:1;">
             <columns>
-                <TableColumn fx:id="colKat" text="Kategori"   prefWidth="120"/>
-                <TableColumn fx:id="colJml" text="Jumlah"     prefWidth="80"/>
-                <TableColumn fx:id="colPct" text="Persentase" prefWidth="100"/>
-                <TableColumn fx:id="colBar" text="Proporsi"   prefWidth="9999"/>
+                <TableColumn fx:id="colKat" text="Kategori"   minWidth="80"  prefWidth="120"/>
+                <TableColumn fx:id="colJml" text="Jumlah"     minWidth="60"  prefWidth="80"/>
+                <TableColumn fx:id="colPct" text="Persentase" minWidth="80"  prefWidth="100"/>
+                <TableColumn fx:id="colBar" text="Proporsi"   minWidth="60"  prefWidth="200"/>
             </columns>
-            <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/></columnResizePolicy>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+            </columnResizePolicy>
         </TableView>
     </VBox>
 </VBox>
