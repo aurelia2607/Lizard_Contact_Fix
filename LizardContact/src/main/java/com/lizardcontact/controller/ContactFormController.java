@@ -25,16 +25,12 @@ public class ContactFormController {
     @FXML private TextField phoneField;
     @FXML private TextField emailField;
     @FXML private TextField addressField;
-
-    // ✅ ComboBox sekarang diisi dari enum ContactCategory
     @FXML private ComboBox<String> kategoriBox;
     @FXML private CheckBox favCheck;
-
     @FXML private VBox personalSection;
     @FXML private TextField nicknameField;
     @FXML private DatePicker birthdatePicker;
     @FXML private ComboBox<String> relasiBox;
-
     @FXML private VBox bisnisSection;
     @FXML private TextField companyField;
     @FXML private TextField jobTitleField;
@@ -47,7 +43,6 @@ public class ContactFormController {
 
     @FXML
     public void initialize() {
-        // ✅ Isi dari enum — tidak ada magic string lagi
         kategoriBox.getItems().addAll(ContactCategory.allDisplayNames());
         kategoriBox.setValue(ContactCategory.TEMAN.getDisplayName());
 
@@ -84,8 +79,6 @@ public class ContactFormController {
     public void setContact(Contact c) {
         this.editContact = c;
         formTitle.setText("Edit Kontak");
-
-        // ✅ Kunci radio button tipe saat mode edit
         rbPersonal.setDisable(true);
         rbBisnis.setDisable(true);
 
@@ -112,8 +105,6 @@ public class ContactFormController {
 
         emailField.setText(c.getEmail() != null ? c.getEmail() : "");
         addressField.setText(c.getAddress() != null ? c.getAddress() : "");
-
-        // ✅ Set kategori dari enum
         kategoriBox.setValue(c.getCategoryName());
         favCheck.setSelected(c.isFavorite());
 
@@ -164,8 +155,6 @@ public class ContactFormController {
         }
 
         ContactManager cm = MainController.getContactManager();
-
-        // ✅ FIX no.5: Validasi duplikat nomor telepon
         int excludeID = (editContact != null) ? editContact.getContactID() : -1;
         if (cm.isPhoneDuplicate(phone, excludeID)) {
             Optional<Contact> existing = cm.findByPhone(phone);
@@ -173,8 +162,6 @@ public class ContactFormController {
             errorLabel.setText("Nomor ini sudah dipakai oleh \"" + namaExisting + "\"!");
             return;
         }
-
-        // ✅ Ambil kategori dari enum via fromString
         ContactCategory kategori = ContactCategory.fromString(kategoriBox.getValue());
 
         if (editContact != null) {
