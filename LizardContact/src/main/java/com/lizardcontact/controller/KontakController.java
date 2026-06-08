@@ -52,7 +52,6 @@ public class KontakController {
     }
 
     private void setupColumns() {
-        // ✅ FIX colNo: pakai getIndex() dari row bukan indexOf()
         colNo.setCellFactory(col -> new TableCell<>() {
             @Override
             protected void updateItem(String item, boolean empty) {

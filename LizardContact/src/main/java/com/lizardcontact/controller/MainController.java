@@ -59,7 +59,7 @@ import javafx.scene.layout.StackPane;
 
         @FXML
         public void initialize() {
-            contactManager = new ContactManager(); // reset tiap kali main window dibuka (fresh login)
+            contactManager = new ContactManager();
             contactManager.loadContacts();
             showDashboard();
         }
