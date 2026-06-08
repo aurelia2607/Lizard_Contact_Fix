@@ -170,7 +170,7 @@ public class DatabaseHelper {
         }
     }
 
-    public String hashPassword(String password) {
+    private String hashPassword(String password) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(password.getBytes());
