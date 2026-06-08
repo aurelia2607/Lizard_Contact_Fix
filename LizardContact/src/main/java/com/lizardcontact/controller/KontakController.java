@@ -61,22 +61,16 @@ public class KontakController {
         });
 
         colNo.setSortable(false);
-
         colNama.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getName()));
         colNama.setSortable(true);
-
         colTelepon.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getPhoneNumber())));
         colTelepon.setSortable(true);
-
         colEmail.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getEmail())));
         colEmail.setSortable(true);
-
         colKategori.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getCategoryName())));
         colKategori.setSortable(true);
-
         colTipe.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getContactType())));
         colTipe.setSortable(true);
-
         colNama.setSortType(TableColumn.SortType.ASCENDING);
         contactTable.getSortOrder().add(colNama);
 
