@@ -37,6 +37,7 @@ public class ContactFormController {
     @FXML private TextField websiteField;
 
     @FXML private Label errorLabel;
+    @FXML private Label displayInfoLabel;
 
     private Contact editContact;
     private Runnable onSaveCallback;
@@ -107,6 +108,10 @@ public class ContactFormController {
         addressField.setText(c.getAddress() != null ? c.getAddress() : "");
         kategoriBox.setValue(c.getCategoryName());
         favCheck.setSelected(c.isFavorite());
+
+        if (displayInfoLabel != null) {
+            displayInfoLabel.setText(c.getDisplayInfo());
+        }
 
         if (c instanceof PersonalContact pc) {
             rbPersonal.setSelected(true);
@@ -185,26 +190,28 @@ public class ContactFormController {
             cm.updateContact(editContact);
 
         } else {
-            Contact newContact;
-            if (rbPersonal.isSelected()) {
-                PersonalContact pc = new PersonalContact();
-                pc.setNickname(nicknameField.getText().trim());
-                pc.setBirthdate(birthdatePicker.getValue());
-                pc.setRelationship(relasiBox.getValue());
-                newContact = pc;
-            } else {
-                BusinessContact bc = new BusinessContact();
-                bc.setCompany(companyField.getText().trim());
-                bc.setJobTitle(jobTitleField.getText().trim());
-                bc.setWebsite(websiteField.getText().trim());
-                newContact = bc;
-            }
+            String tipe = rbPersonal.isSelected() ? "personal" : "bisnis";
+            Contact newContact = ContactFactory.create(tipe);
+
             newContact.setName(name);
             newContact.setPhoneNumber(phone);
             newContact.setEmail(email);
             newContact.setAddress(addressField.getText().trim());
             newContact.setCategory(kategori);
             newContact.setFavorite(favCheck.isSelected());
+
+            if (newContact instanceof PersonalContact pc) {
+                pc.setNickname(nicknameField.getText().trim());
+                pc.setBirthdate(birthdatePicker.getValue());
+                pc.setRelationship(relasiBox.getValue());
+            } else if (newContact instanceof BusinessContact bc) {
+                bc.setCompany(companyField.getText().trim());
+                bc.setJobTitle(jobTitleField.getText().trim());
+                bc.setWebsite(websiteField.getText().trim());
+            }
+
+            System.out.println("[ContactFactory] " + newContact.getDisplayInfo());
+
             cm.addContact(newContact);
         }
 
