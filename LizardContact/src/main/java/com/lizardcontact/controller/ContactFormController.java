@@ -155,6 +155,7 @@ public class ContactFormController {
         }
 
         ContactManager cm = MainController.getContactManager();
+
         int excludeID = (editContact != null) ? editContact.getContactID() : -1;
         if (cm.isPhoneDuplicate(phone, excludeID)) {
             Optional<Contact> existing = cm.findByPhone(phone);
