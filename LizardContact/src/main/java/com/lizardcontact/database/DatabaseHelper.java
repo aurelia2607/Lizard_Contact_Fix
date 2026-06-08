@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import com.lizardcontact.model.ContactFactory;
 
 public class DatabaseHelper {
     private static final String DB_URL = "jdbc:sqlite:contacts.db";
@@ -231,8 +232,9 @@ public class DatabaseHelper {
         Contact c;
         int cid = rs.getInt("contactID");
 
-        if ("Personal".equals(type)) {
-            PersonalContact pc = new PersonalContact();
+        c = ContactFactory.create(type.toLowerCase());
+
+        if (c instanceof PersonalContact pc) {
             try {
                 PreparedStatement dps = connection.prepareStatement(
                         "SELECT * FROM personalContactDetails WHERE contactID=?");
@@ -245,9 +247,7 @@ public class DatabaseHelper {
                     pc.setRelationship(drs.getString("relationship"));
                 }
             } catch (Exception ignored) {}
-            c = pc;
-        } else {
-            BusinessContact bc = new BusinessContact();
+        } else if (c instanceof BusinessContact bc) {
             try {
                 PreparedStatement dps = connection.prepareStatement(
                         "SELECT * FROM businessContactDetails WHERE contactID=?");
@@ -259,7 +259,6 @@ public class DatabaseHelper {
                     bc.setWebsite(drs.getString("website"));
                 }
             } catch (Exception ignored) {}
-            c = bc;
         }
 
         c.setContactID(cid);
