@@ -45,7 +45,6 @@ public class DatabaseHelper {
                     passwordHash TEXT NOT NULL,
                     email TEXT
                 )""");
-
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS contacts (
                     contactID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -60,7 +59,6 @@ public class DatabaseHelper {
                     createdAt TEXT,
                     FOREIGN KEY(userID) REFERENCES users(userID)
                 )""");
-
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS personalContactDetails (
                     detailID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -70,7 +68,6 @@ public class DatabaseHelper {
                     relationship TEXT,
                     FOREIGN KEY(contactID) REFERENCES contacts(contactID)
                 )""");
-
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS businessContactDetails (
                     detailID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -80,7 +77,6 @@ public class DatabaseHelper {
                     website TEXT,
                     FOREIGN KEY(contactID) REFERENCES contacts(contactID)
                 )""");
-
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS activity_logs (
                     logID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -130,14 +126,9 @@ public class DatabaseHelper {
                 PreparedStatement cps = connection.prepareStatement(
                         "INSERT INTO contacts (userID,contactType,name,phoneNumber,email,address,category,favorite,createdAt) VALUES (?,?,?,?,?,?,?,?,?)",
                         Statement.RETURN_GENERATED_KEYS);
-                cps.setInt(1, uid);
-                cps.setString(2, c[0]);
-                cps.setString(3, c[1]);
-                cps.setString(4, c[2]);
-                cps.setString(5, c[3]);
-                cps.setString(6, c[4]);
-                cps.setString(7, c[5]);
-                cps.setInt(8, Integer.parseInt(c[6]));
+                cps.setInt(1, uid); cps.setString(2, c[0]); cps.setString(3, c[1]);
+                cps.setString(4, c[2]); cps.setString(5, c[3]); cps.setString(6, c[4]);
+                cps.setString(7, c[5]); cps.setInt(8, Integer.parseInt(c[6]));
                 cps.setString(9, LocalDateTime.now().minusDays((long)(Math.random()*30)).toString());
                 cps.executeUpdate();
                 ResultSet cKeys = cps.getGeneratedKeys();
@@ -146,18 +137,14 @@ public class DatabaseHelper {
                 if (c[0].equals("Personal")) {
                     PreparedStatement pps = connection.prepareStatement(
                             "INSERT INTO personalContactDetails (contactID,nickname,birthdate,relationship) VALUES (?,?,?,?)");
-                    pps.setInt(1, cid);
-                    pps.setString(2, c[1].split(" ")[0]);
-                    pps.setString(3, "1990-01-01");
-                    pps.setString(4, "Sahabat");
+                    pps.setInt(1, cid); pps.setString(2, c[1].split(" ")[0]);
+                    pps.setString(3, "1990-01-01"); pps.setString(4, "Sahabat");
                     pps.executeUpdate();
                 } else {
                     PreparedStatement bps = connection.prepareStatement(
                             "INSERT INTO businessContactDetails (contactID,company,jobTitle,website) VALUES (?,?,?,?)");
-                    bps.setInt(1, cid);
-                    bps.setString(2, c[1]);
-                    bps.setString(3, "Manager");
-                    bps.setString(4, "www.example.com");
+                    bps.setInt(1, cid); bps.setString(2, c[1]);
+                    bps.setString(3, "Manager"); bps.setString(4, "www.example.com");
                     bps.executeUpdate();
                 }
             }
@@ -173,9 +160,7 @@ public class DatabaseHelper {
             for (String[] l : logs) {
                 PreparedStatement lps = connection.prepareStatement(
                         "INSERT INTO activity_logs (userID,action,contactName,description,timestamp) VALUES (?,?,?,?,?)");
-                lps.setInt(1, uid);
-                lps.setString(2, l[0]);
-                lps.setString(3, l[1]);
+                lps.setInt(1, uid); lps.setString(2, l[0]); lps.setString(3, l[1]);
                 lps.setString(4, l[2]);
                 lps.setString(5, LocalDateTime.now().minusHours((long)(Math.random()*72)).toString());
                 lps.executeUpdate();
@@ -235,8 +220,7 @@ public class DatabaseHelper {
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Contact c = buildContact(rs);
-                list.add(c);
+                list.add(buildContact(rs));
             }
         } catch (SQLException e) { e.printStackTrace(); }
         return list;
@@ -285,7 +269,7 @@ public class DatabaseHelper {
         c.setPhoneNumber(rs.getString("phoneNumber"));
         c.setEmail(rs.getString("email"));
         c.setAddress(rs.getString("address"));
-        c.setCategory(rs.getString("category"));
+        c.setCategoryFromString(rs.getString("category"));
         c.setFavorite(rs.getInt("favorite") == 1);
         try {
             String ca = rs.getString("createdAt");
@@ -299,14 +283,9 @@ public class DatabaseHelper {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO contacts (userID,contactType,name,phoneNumber,email,address,category,favorite,createdAt) VALUES (?,?,?,?,?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1, userID);
-            ps.setString(2, c.getContactType());
-            ps.setString(3, c.getName());
-            ps.setString(4, c.getPhoneNumber());
-            ps.setString(5, c.getEmail());
-            ps.setString(6, c.getAddress());
-            ps.setString(7, c.getCategory());
-            ps.setInt(8, c.isFavorite() ? 1 : 0);
+            ps.setInt(1, userID); ps.setString(2, c.getContactType()); ps.setString(3, c.getName());
+            ps.setString(4, c.getPhoneNumber()); ps.setString(5, c.getEmail()); ps.setString(6, c.getAddress());
+            ps.setString(7, c.getCategoryName()); ps.setInt(8, c.isFavorite() ? 1 : 0);
             ps.setString(9, LocalDateTime.now().toString());
             ps.executeUpdate();
             ResultSet keys = ps.getGeneratedKeys();
@@ -315,18 +294,15 @@ public class DatabaseHelper {
             if (c instanceof PersonalContact pc) {
                 PreparedStatement dps = connection.prepareStatement(
                         "INSERT INTO personalContactDetails (contactID,nickname,birthdate,relationship) VALUES (?,?,?,?)");
-                dps.setInt(1, id);
-                dps.setString(2, pc.getNickname());
+                dps.setInt(1, id); dps.setString(2, pc.getNickname());
                 dps.setString(3, pc.getBirthdate() != null ? pc.getBirthdate().toString() : "");
                 dps.setString(4, pc.getRelationship());
                 dps.executeUpdate();
             } else if (c instanceof BusinessContact bc) {
                 PreparedStatement dps = connection.prepareStatement(
                         "INSERT INTO businessContactDetails (contactID,company,jobTitle,website) VALUES (?,?,?,?)");
-                dps.setInt(1, id);
-                dps.setString(2, bc.getCompany());
-                dps.setString(3, bc.getJobTitle());
-                dps.setString(4, bc.getWebsite());
+                dps.setInt(1, id); dps.setString(2, bc.getCompany());
+                dps.setString(3, bc.getJobTitle()); dps.setString(4, bc.getWebsite());
                 dps.executeUpdate();
             }
             return id;
@@ -337,12 +313,9 @@ public class DatabaseHelper {
         try {
             PreparedStatement ps = connection.prepareStatement(
                     "UPDATE contacts SET name=?,phoneNumber=?,email=?,address=?,category=?,favorite=? WHERE contactID=?");
-            ps.setString(1, c.getName());
-            ps.setString(2, c.getPhoneNumber());
-            ps.setString(3, c.getEmail());
-            ps.setString(4, c.getAddress());
-            ps.setString(5, c.getCategory());
-            ps.setInt(6, c.isFavorite() ? 1 : 0);
+            ps.setString(1, c.getName()); ps.setString(2, c.getPhoneNumber());
+            ps.setString(3, c.getEmail()); ps.setString(4, c.getAddress());
+            ps.setString(5, c.getCategoryName()); ps.setInt(6, c.isFavorite() ? 1 : 0);
             ps.setInt(7, c.getContactID());
             ps.executeUpdate();
 
@@ -351,72 +324,84 @@ public class DatabaseHelper {
                         "UPDATE personalContactDetails SET nickname=?,birthdate=?,relationship=? WHERE contactID=?");
                 dps.setString(1, pc.getNickname());
                 dps.setString(2, pc.getBirthdate() != null ? pc.getBirthdate().toString() : "");
-                dps.setString(3, pc.getRelationship());
-                dps.setInt(4, c.getContactID());
+                dps.setString(3, pc.getRelationship()); dps.setInt(4, c.getContactID());
                 dps.executeUpdate();
             } else if (c instanceof BusinessContact bc) {
                 PreparedStatement dps = connection.prepareStatement(
                         "UPDATE businessContactDetails SET company=?,jobTitle=?,website=? WHERE contactID=?");
-                dps.setString(1, bc.getCompany());
-                dps.setString(2, bc.getJobTitle());
-                dps.setString(3, bc.getWebsite());
-                dps.setInt(4, c.getContactID());
+                dps.setString(1, bc.getCompany()); dps.setString(2, bc.getJobTitle());
+                dps.setString(3, bc.getWebsite()); dps.setInt(4, c.getContactID());
                 dps.executeUpdate();
             }
         } catch (SQLException e) { e.printStackTrace(); }
     }
-
     public void deleteContact(int contactID) {
         try {
-            connection.createStatement().execute("DELETE FROM personalContactDetails WHERE contactID=" + contactID);
-            connection.createStatement().execute("DELETE FROM businessContactDetails WHERE contactID=" + contactID);
-            connection.createStatement().execute("DELETE FROM contacts WHERE contactID=" + contactID);
+            PreparedStatement ps1 = connection.prepareStatement(
+                    "DELETE FROM personalContactDetails WHERE contactID=?");
+            ps1.setInt(1, contactID);
+            ps1.executeUpdate();
+
+            PreparedStatement ps2 = connection.prepareStatement(
+                    "DELETE FROM businessContactDetails WHERE contactID=?");
+            ps2.setInt(1, contactID);
+            ps2.executeUpdate();
+
+            PreparedStatement ps3 = connection.prepareStatement(
+                    "DELETE FROM contacts WHERE contactID=?");
+            ps3.setInt(1, contactID);
+            ps3.executeUpdate();
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
     public void toggleFavorite(int contactID, boolean fav) {
         try {
-            PreparedStatement ps = connection.prepareStatement("UPDATE contacts SET favorite=? WHERE contactID=?");
+            PreparedStatement ps = connection.prepareStatement(
+                    "UPDATE contacts SET favorite=? WHERE contactID=?");
             ps.setInt(1, fav ? 1 : 0);
             ps.setInt(2, contactID);
             ps.executeUpdate();
         } catch (SQLException e) { e.printStackTrace(); }
     }
-
     public ContactStatistics getStatistics(int userID) {
         ContactStatistics stats = new ContactStatistics();
         try {
-            ResultSet rs = connection.createStatement().executeQuery(
-                    "SELECT COUNT(*) FROM contacts WHERE userID=" + userID);
+            PreparedStatement ps;
+            ResultSet rs;
+
+            ps = connection.prepareStatement("SELECT COUNT(*) FROM contacts WHERE userID=?");
+            ps.setInt(1, userID); rs = ps.executeQuery();
             stats.setTotalContacts(rs.next() ? rs.getInt(1) : 0);
 
-            rs = connection.createStatement().executeQuery(
-                    "SELECT COUNT(*) FROM contacts WHERE userID=" + userID + " AND favorite=1");
+            ps = connection.prepareStatement("SELECT COUNT(*) FROM contacts WHERE userID=? AND favorite=1");
+            ps.setInt(1, userID); rs = ps.executeQuery();
             stats.setFavoriteCount(rs.next() ? rs.getInt(1) : 0);
 
-            rs = connection.createStatement().executeQuery(
-                    "SELECT COUNT(*) FROM contacts WHERE userID=" + userID + " AND contactType='Personal'");
+            ps = connection.prepareStatement("SELECT COUNT(*) FROM contacts WHERE userID=? AND contactType='Personal'");
+            ps.setInt(1, userID); rs = ps.executeQuery();
             stats.setPersonalCount(rs.next() ? rs.getInt(1) : 0);
 
-            rs = connection.createStatement().executeQuery(
-                    "SELECT COUNT(*) FROM contacts WHERE userID=" + userID + " AND contactType='Bisnis'");
+            ps = connection.prepareStatement("SELECT COUNT(*) FROM contacts WHERE userID=? AND contactType='Bisnis'");
+            ps.setInt(1, userID); rs = ps.executeQuery();
             stats.setBusinessCount(rs.next() ? rs.getInt(1) : 0);
 
             String thisMonth = LocalDateTime.now().getYear() + "-" +
                     String.format("%02d", LocalDateTime.now().getMonthValue());
-            rs = connection.createStatement().executeQuery(
-                    "SELECT COUNT(*) FROM contacts WHERE userID=" + userID + " AND createdAt LIKE '" + thisMonth + "%'");
+            ps = connection.prepareStatement(
+                    "SELECT COUNT(*) FROM contacts WHERE userID=? AND createdAt LIKE ?");
+            ps.setInt(1, userID);
+            ps.setString(2, thisMonth + "%");
+            rs = ps.executeQuery();
             stats.setNewThisMonth(rs.next() ? rs.getInt(1) : 0);
 
-            rs = connection.createStatement().executeQuery(
-                    "SELECT category, COUNT(*) as cnt FROM contacts WHERE userID=" + userID +
-                            " GROUP BY category ORDER BY cnt DESC");
+            ps = connection.prepareStatement(
+                    "SELECT category, COUNT(*) as cnt FROM contacts WHERE userID=? GROUP BY category ORDER BY cnt DESC");
+            ps.setInt(1, userID); rs = ps.executeQuery();
             Map<String, Integer> dist = new LinkedHashMap<>();
-            String top = null;
-            int topCnt = 0;
+            String top = null; int topCnt = 0;
             while (rs.next()) {
                 String cat = rs.getString("category");
-                int cnt = rs.getInt("cnt");
+                int cnt    = rs.getInt("cnt");
                 dist.put(cat, cnt);
                 if (top == null || cnt > topCnt) { top = cat; topCnt = cnt; }
             }
@@ -430,29 +415,35 @@ public class DatabaseHelper {
         try {
             PreparedStatement ps = connection.prepareStatement(
                     "INSERT INTO activity_logs (userID,action,contactName,description,timestamp) VALUES (?,?,?,?,?)");
-            ps.setInt(1, userID);
-            ps.setString(2, action);
-            ps.setString(3, contactName);
-            ps.setString(4, description);
-            ps.setString(5, LocalDateTime.now().toString());
+            ps.setInt(1, userID); ps.setString(2, action); ps.setString(3, contactName);
+            ps.setString(4, description); ps.setString(5, LocalDateTime.now().toString());
             ps.executeUpdate();
         } catch (SQLException e) { e.printStackTrace(); }
     }
-
     public List<ActivityLog> getLogs(int userID, String filterAction, String fromDate, String toDate) {
         List<ActivityLog> list = new ArrayList<>();
         try {
+            // Build query dengan placeholder ? untuk tiap kondisi opsional
             StringBuilder sql = new StringBuilder(
-                    "SELECT * FROM activity_logs WHERE userID=" + userID);
-            if (filterAction != null && !filterAction.equals("Semua"))
-                sql.append(" AND action='").append(filterAction).append("'");
-            if (fromDate != null && !fromDate.isEmpty())
-                sql.append(" AND timestamp >= '").append(fromDate).append("'");
-            if (toDate != null && !toDate.isEmpty())
-                sql.append(" AND timestamp <= '").append(toDate).append(" 23:59:59'");
+                    "SELECT * FROM activity_logs WHERE userID=?");
+
+            boolean filterByAction = filterAction != null && !filterAction.equals("Semua");
+            boolean filterByFrom   = fromDate != null && !fromDate.isEmpty();
+            boolean filterByTo     = toDate   != null && !toDate.isEmpty();
+
+            if (filterByAction) sql.append(" AND action=?");
+            if (filterByFrom)   sql.append(" AND timestamp >= ?");
+            if (filterByTo)     sql.append(" AND timestamp <= ?");
             sql.append(" ORDER BY timestamp DESC");
 
-            ResultSet rs = connection.createStatement().executeQuery(sql.toString());
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            int idx = 1;
+            ps.setInt(idx++, userID);
+            if (filterByAction) ps.setString(idx++, filterAction);
+            if (filterByFrom)   ps.setString(idx++, fromDate);
+            if (filterByTo)     ps.setString(idx++, toDate + " 23:59:59");
+
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 ActivityLog log = new ActivityLog();
                 log.setLogID(rs.getInt("logID"));
@@ -469,7 +460,10 @@ public class DatabaseHelper {
 
     public void clearAllLogs(int userID) {
         try {
-            connection.createStatement().execute("DELETE FROM activity_logs WHERE userID=" + userID);
+            PreparedStatement ps = connection.prepareStatement(
+                    "DELETE FROM activity_logs WHERE userID=?");
+            ps.setInt(1, userID);
+            ps.executeUpdate();
         } catch (SQLException e) { e.printStackTrace(); }
     }
 }
