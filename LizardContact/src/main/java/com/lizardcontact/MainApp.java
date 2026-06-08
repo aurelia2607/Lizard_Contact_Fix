@@ -21,7 +21,9 @@ public class MainApp extends Application {
 
     public static void showLogin() throws Exception {
         Parent root = FXMLLoader.load(MainApp.class.getResource("/com/lizardcontact/fxml/Login.fxml"));
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(MainApp.class.getResource("/com/lizardcontact/css/style.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.setWidth(430);
         primaryStage.setHeight(360);
         primaryStage.setResizable(false);
@@ -30,7 +32,9 @@ public class MainApp extends Application {
 
     public static void showMain() throws Exception {
         Parent root = FXMLLoader.load(MainApp.class.getResource("/com/lizardcontact/fxml/Main.fxml"));
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(MainApp.class.getResource("/com/lizardcontact/css/style.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.setWidth(920);
         primaryStage.setHeight(660);
         primaryStage.setResizable(true);
