@@ -33,34 +33,55 @@ public class KontakController {
     private ContactManager cm;
 
     private static final String BTN =
-        "-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;" +
-        "-fx-border-width:2;-fx-font-size:10;-fx-cursor:hand;-fx-padding:2 8;";
+            "-fx-background-color:#d4d0c8;-fx-border-color:#ffffff #808080 #808080 #ffffff;" +
+                    "-fx-border-width:2;-fx-font-size:10;-fx-cursor:hand;-fx-padding:2 8;";
 
     @FXML
     public void initialize() {
         cm = MainController.getContactManager();
-        filterKategori.getItems().addAll("Semua","Teman","Keluarga","Kolega","Lainnya");
+        filterKategori.getItems().add("Semua");
+        filterKategori.getItems().addAll(
+                com.lizardcontact.model.ContactCategory.allDisplayNames());
         filterKategori.setValue("Semua");
-        filterTipe.getItems().addAll("Semua","Personal","Bisnis");
+
+        filterTipe.getItems().addAll("Semua", "Personal", "Bisnis");
         filterTipe.setValue("Semua");
+
         setupColumns();
         loadTable(cm.getContacts());
     }
 
     private void setupColumns() {
-        colNo.setCellValueFactory(d ->
-            new SimpleStringProperty(String.valueOf(contactTable.getItems().indexOf(d.getValue())+1)));
-        colNama.setCellValueFactory(d ->
-            new SimpleStringProperty(d.getValue().getName()));
-        colTelepon.setCellValueFactory(d ->
-            new SimpleStringProperty(nvl(d.getValue().getPhoneNumber())));
-        colEmail.setCellValueFactory(d ->
-            new SimpleStringProperty(nvl(d.getValue().getEmail())));
-        colKategori.setCellValueFactory(d ->
-            new SimpleStringProperty(nvl(d.getValue().getCategory())));
-        colTipe.setCellValueFactory(d ->
-            new SimpleStringProperty(nvl(d.getValue().getContactType())));
+        // ✅ FIX colNo: pakai getIndex() dari row bukan indexOf()
+        colNo.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                setText((empty || getIndex() < 0) ? null : String.valueOf(getIndex() + 1));
+            }
+        });
 
+        colNo.setSortable(false);
+
+        colNama.setCellValueFactory(d -> new SimpleStringProperty(d.getValue().getName()));
+        colNama.setSortable(true);
+
+        colTelepon.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getPhoneNumber())));
+        colTelepon.setSortable(true);
+
+        colEmail.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getEmail())));
+        colEmail.setSortable(true);
+
+        colKategori.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getCategoryName())));
+        colKategori.setSortable(true);
+
+        colTipe.setCellValueFactory(d -> new SimpleStringProperty(nvl(d.getValue().getContactType())));
+        colTipe.setSortable(true);
+
+        colNama.setSortType(TableColumn.SortType.ASCENDING);
+        contactTable.getSortOrder().add(colNama);
+
+        colAksi.setSortable(false);
         colAksi.setCellFactory(col -> new TableCell<>() {
             final Button editBtn = new Button("Edit");
             final Button delBtn  = new Button("Hapus");
@@ -77,17 +98,19 @@ public class KontakController {
                     refreshTable();
                 });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getIndex() >= getTableView().getItems().size()) {
-                    setGraphic(null); return;
+                    setGraphic(null);
+                    return;
                 }
                 Contact c = getTableView().getItems().get(getIndex());
                 favBtn.setText(c.isFavorite() ? "★" : "☆");
                 favBtn.setStyle(BTN + (c.isFavorite()
-                    ? "-fx-text-fill:black;-fx-font-size:13;"
-                    : "-fx-text-fill:#888;-fx-font-size:13;"));
+                        ? "-fx-text-fill:black;-fx-font-size:13;"
+                        : "-fx-text-fill:#888;-fx-font-size:13;"));
                 setGraphic(box);
             }
         });
@@ -97,6 +120,7 @@ public class KontakController {
 
     private void loadTable(List<Contact> list) {
         contactTable.getItems().setAll(list);
+        contactTable.sort();
         long fav = cm.getContacts().stream().filter(Contact::isFavorite).count();
         infoLabel.setText("Menampilkan " + list.size() + " dari " + cm.getContacts().size() + " kontak");
         favInfo.setText("Favorit: " + fav);
@@ -104,7 +128,7 @@ public class KontakController {
 
     @FXML private void doSearch() {
         loadTable(cm.search(searchField.getText().trim(),
-                            filterKategori.getValue(), filterTipe.getValue()));
+                filterKategori.getValue(), filterTipe.getValue()));
     }
 
     @FXML private void resetSearch() {
@@ -119,7 +143,7 @@ public class KontakController {
     private void openForm(Contact c) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/com/lizardcontact/fxml/ContactForm.fxml"));
+                    getClass().getResource("/com/lizardcontact/fxml/ContactForm.fxml"));
             Node form = loader.load();
             ContactFormController ctrl = loader.getController();
             if (c != null) ctrl.setContact(c);
@@ -131,11 +155,13 @@ public class KontakController {
 
     private void konfirmasiHapus(Contact c) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
-        a.setTitle("Hapus Kontak"); a.setHeaderText(null);
+        a.setTitle("Hapus Kontak");
+        a.setHeaderText(null);
         a.setContentText("Hapus kontak \"" + c.getName() + "\"?");
         Optional<ButtonType> r = a.showAndWait();
         if (r.isPresent() && r.get() == ButtonType.OK) {
-            cm.deleteContact(c); refreshTable();
+            cm.deleteContact(c);
+            refreshTable();
         }
     }
 
