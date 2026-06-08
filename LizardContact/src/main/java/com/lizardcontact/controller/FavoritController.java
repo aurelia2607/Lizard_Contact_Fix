@@ -53,7 +53,7 @@ public class FavoritController {
         colTelepon.setCellValueFactory(d ->
             new SimpleStringProperty(nvl(d.getValue().getPhoneNumber())));
         colKategori.setCellValueFactory(d ->
-            new SimpleStringProperty(nvl(d.getValue().getCategory())));
+            new SimpleStringProperty(nvl(d.getValue().getCategoryName())));
         colTipe.setCellValueFactory(d ->
             new SimpleStringProperty(nvl(d.getValue().getContactType())));
 
@@ -89,7 +89,7 @@ public class FavoritController {
         else if ("Nama Z-A".equals(sort))
             list = list.stream().sorted((a,b)->b.getName().compareToIgnoreCase(a.getName())).collect(Collectors.toList());
         else if ("Kategori".equals(sort))
-            list = list.stream().sorted((a,b)->nvl(a.getCategory()).compareToIgnoreCase(nvl(b.getCategory()))).collect(Collectors.toList());
+            list = list.stream().sorted((a,b)->nvl(a.getCategoryName()).compareToIgnoreCase(nvl(b.getCategoryName()))).collect(Collectors.toList());
 
         favTable.getItems().setAll(list);
         int total = cm.getFavorites().size();

@@ -8,13 +8,13 @@ public class PersonalContact extends Contact {
     private String relationship;
 
     public PersonalContact() {
-        this.contactType = "Personal";
+        setContactType("Personal");
     }
 
-    public PersonalContact(String name, String phoneNumber, String email, String address, String category,
+    public PersonalContact(String name, String phoneNumber, String email, String address, ContactCategory category,
                            String nickname, LocalDate birthdate, String relationship) {
         super(name, phoneNumber, email, address, category);
-        this.contactType = "Personal";
+        setContactType("Personal");
         this.nickname = nickname;
         this.birthdate = birthdate;
         this.relationship = relationship;
@@ -22,7 +22,7 @@ public class PersonalContact extends Contact {
 
     @Override
     public String getDisplayInfo() {
-        return "[Personal] " + name + (nickname != null && !nickname.isEmpty() ? " (" + nickname + ")" : "");
+        return "[Personal] " + getName() + (nickname != null && !nickname.isEmpty() ? " (" + nickname + ")" : "");
     }
 
     public String getNickname() { return nickname; }
