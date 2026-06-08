@@ -2,17 +2,17 @@ package com.lizardcontact.model;
 
 import java.time.LocalDateTime;
 
-public abstract class Contact {
-    protected int contactID;
-    protected String contactType;
-    protected String name;
-    protected String phoneNumber;
-    protected String email;
-    protected String address;
-    protected ContactCategory category;
-    protected boolean favorite;
-    protected int userID;
-    protected LocalDateTime createdAt;
+public abstract class Contact implements Displayable {
+    private int contactID;
+    private String contactType;
+    private String name;
+    private String phoneNumber;
+    private String email;
+    private String address;
+    private ContactCategory category;
+    private boolean favorite;
+    private int userID;
+    private LocalDateTime createdAt;
 
     public Contact() {}
 
@@ -25,6 +25,7 @@ public abstract class Contact {
         this.createdAt   = LocalDateTime.now();
     }
 
+    @Override
     public abstract String getDisplayInfo();
 
     public int getContactID() {

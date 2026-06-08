@@ -15,148 +15,49 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.StackPane;
 
 public class MainController {
-    @FXML
-    private StackPane contentArea;
-    @FXML
-    private Button btnDashboard;
-    @FXML
-    private Button btnKontak;
-    @FXMLpackage com.lizardcontact.controller;
 
-import com.lizardcontact.MainApp;
-import com.lizardcontact.model.ContactManager;
-import com.lizardcontact.util.SessionManager;
-import java.util.List;
-import java.util.Optional;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.StackPane;
+    @FXML private StackPane contentArea;
+    @FXML private Button btnDashboard;
+    @FXML private Button btnKontak;
+    @FXML private Button btnFavorit;
+    @FXML private Button btnStatistik;
+    @FXML private Button btnRiwayat;
 
-    public class MainController {
+    private static ContactManager contactManager = new ContactManager();
 
-        @FXML private StackPane contentArea;
-        @FXML private Button btnDashboard;
-        @FXML private Button btnKontak;
-        @FXML private Button btnFavorit;
-        @FXML private Button btnStatistik;
-        @FXML private Button btnRiwayat;
-        
-        private static ContactManager contactManager = new ContactManager();
-
-        private Button activeBtn;
-
-        private static final String STYLE_NORMAL =
-                "-fx-background-color:#d4d0c8;-fx-border-color:transparent;" +
-                        "-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;";
-        private static final String STYLE_ACTIVE =
-                "-fx-background-color:#000080;-fx-text-fill:white;-fx-border-color:transparent;" +
-                        "-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;-fx-font-weight:bold;";
-
-        @FXML
-        public void initialize() {
-            contactManager = new ContactManager();
-            contactManager.loadContacts();
-            showDashboard();
-        }
-
-        private void setActive(Button btn) {
-            List.of(btnDashboard, btnKontak, btnFavorit, btnStatistik, btnRiwayat)
-                    .forEach(b -> b.setStyle(STYLE_NORMAL));
-            btn.setStyle(STYLE_ACTIVE);
-            this.activeBtn = btn;
-        }
-
-        @FXML public void showDashboard()  { loadPage("/com/lizardcontact/fxml/Dashboard.fxml");  setActive(btnDashboard);  }
-        @FXML public void showKontak()     { loadPage("/com/lizardcontact/fxml/Kontak.fxml");      setActive(btnKontak);     }
-        @FXML public void showFavorit()    { loadPage("/com/lizardcontact/fxml/Favorit.fxml");     setActive(btnFavorit);    }
-        @FXML public void showStatistik()  { loadPage("/com/lizardcontact/fxml/Statistik.fxml");   setActive(btnStatistik);  }
-        @FXML public void showRiwayat()    { loadPage("/com/lizardcontact/fxml/Riwayat.fxml");     setActive(btnRiwayat);    }
-
-        private void loadPage(String fxml) {
-            try {
-                Node page = FXMLLoader.load(getClass().getResource(fxml));
-                contentArea.getChildren().setAll(page);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @FXML
-        private void logout() {
-            Alert alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Keluar");
-            alert.setHeaderText(null);
-            alert.setContentText("Yakin ingin keluar?");
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                SessionManager.getInstance().logout();
-                try {
-                    MainApp.showLogin();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        public static ContactManager getContactManager() {
-            return contactManager;
-        }
-    }
-
-    private Button btnFavorit;
-    @FXML
-    private Button btnStatistik;
-    @FXML
-    private Button btnRiwayat;
-    public static ContactManager contactManager = new ContactManager();
     private Button activeBtn;
-    private static final String STYLE_NORMAL = "-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;";
-    private static final String STYLE_ACTIVE = "-fx-background-color:#000080;-fx-text-fill:white;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;-fx-font-weight:bold;";
+
+    private static final String STYLE_NORMAL =
+            "-fx-background-color:#d4d0c8;-fx-border-color:transparent;" +
+                    "-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;";
+    private static final String STYLE_ACTIVE =
+            "-fx-background-color:#000080;-fx-text-fill:white;-fx-border-color:transparent;" +
+                    "-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;-fx-font-weight:bold;";
 
     @FXML
     public void initialize() {
+        contactManager = new ContactManager();
         contactManager.loadContacts();
-        this.showDashboard();
+        showDashboard();
     }
 
     private void setActive(Button btn) {
-        List.of(this.btnDashboard, this.btnKontak, this.btnFavorit, this.btnStatistik, this.btnRiwayat).forEach((b) -> b.setStyle("-fx-background-color:#d4d0c8;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;"));
-        btn.setStyle("-fx-background-color:#000080;-fx-text-fill:white;-fx-border-color:transparent;-fx-padding:6 12;-fx-font-size:12;-fx-cursor:hand;-fx-alignment:CENTER_LEFT;-fx-font-weight:bold;");
+        List.of(btnDashboard, btnKontak, btnFavorit, btnStatistik, btnRiwayat)
+                .forEach(b -> b.setStyle(STYLE_NORMAL));
+        btn.setStyle(STYLE_ACTIVE);
         this.activeBtn = btn;
     }
 
-    @FXML
-    public void showDashboard() {
-        this.loadPage("/com/lizardcontact/fxml/Dashboard.fxml");
-        this.setActive(this.btnDashboard);
-    }
-    @FXML public void showKontak()    {
-        this.loadPage("/com/lizardcontact/fxml/Kontak.fxml");
-        this.setActive(btnKontak);
-    }
-    @FXML public void showFavorit()   {
-        this.loadPage("/com/lizardcontact/fxml/Favorit.fxml");
-        this.setActive(btnFavorit);
-    }
-    @FXML public void showStatistik() {
-        this.loadPage("/com/lizardcontact/fxml/Statistik.fxml");
-        this.setActive(btnStatistik);
-    }
-    @FXML
-    public void showRiwayat() {
-        this.loadPage("/com/lizardcontact/fxml/Riwayat.fxml");
-        this.setActive(this.btnRiwayat);
-    }
+    @FXML public void showDashboard()  { loadPage("/com/lizardcontact/fxml/Dashboard.fxml");  setActive(btnDashboard);  }
+    @FXML public void showKontak()     { loadPage("/com/lizardcontact/fxml/Kontak.fxml");      setActive(btnKontak);     }
+    @FXML public void showFavorit()    { loadPage("/com/lizardcontact/fxml/Favorit.fxml");     setActive(btnFavorit);    }
+    @FXML public void showStatistik()  { loadPage("/com/lizardcontact/fxml/Statistik.fxml");   setActive(btnStatistik);  }
+    @FXML public void showRiwayat()    { loadPage("/com/lizardcontact/fxml/Riwayat.fxml");     setActive(btnRiwayat);    }
 
     private void loadPage(String fxml) {
         try {
-            Node page = (Node)FXMLLoader.load(this.getClass().getResource(fxml));
-            this.contentArea.getChildren().setAll(new Node[]{page});
+            Node page = FXMLLoader.load(getClass().getResource(fxml));
+            contentArea.getChildren().setAll(page);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -166,12 +67,11 @@ import javafx.scene.layout.StackPane;
     private void logout() {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Keluar");
-        alert.setHeaderText((String)null);
+        alert.setHeaderText(null);
         alert.setContentText("Yakin ingin keluar?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             SessionManager.getInstance().logout();
-
             try {
                 MainApp.showLogin();
             } catch (Exception e) {
@@ -179,6 +79,7 @@ import javafx.scene.layout.StackPane;
             }
         }
     }
+
     public static ContactManager getContactManager() {
         return contactManager;
     }
