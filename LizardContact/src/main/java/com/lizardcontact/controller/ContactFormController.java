@@ -2,12 +2,13 @@ package com.lizardcontact.controller;
 
 import com.lizardcontact.model.*;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-import java.time.LocalDate;
+import java.util.Optional;
 
 public class ContactFormController {
 
@@ -24,6 +25,8 @@ public class ContactFormController {
     @FXML private TextField phoneField;
     @FXML private TextField emailField;
     @FXML private TextField addressField;
+
+    // ✅ ComboBox sekarang diisi dari enum ContactCategory
     @FXML private ComboBox<String> kategoriBox;
     @FXML private CheckBox favCheck;
 
@@ -44,31 +47,22 @@ public class ContactFormController {
 
     @FXML
     public void initialize() {
-        kategoriBox.getItems().addAll("Teman", "Keluarga", "Kolega", "Lainnya");
-        kategoriBox.setValue("Teman");
+        // ✅ Isi dari enum — tidak ada magic string lagi
+        kategoriBox.getItems().addAll(ContactCategory.allDisplayNames());
+        kategoriBox.setValue(ContactCategory.TEMAN.getDisplayName());
+
         relasiBox.getItems().addAll("Ayah", "Ibu", "Saudara", "Pasangan", "Sahabat", "Teman", "Lainnya");
         relasiBox.setValue("Teman");
 
         kodeNegaraBox.getItems().addAll(
-                "+62 (Indonesia)",
-                "+1 (USA)",
-                "+60 (Malaysia)",
-                "+65 (Singapura)",
-                "+81 (Jepang)",
-                "+82 (Korea)",
-                "+86 (Tiongkok)",
-                "+91 (India)",
-                "+44 (Inggris)",
-                "+61 (Australia)"
+                "+62 (Indonesia)", "+1 (USA)", "+60 (Malaysia)", "+65 (Singapura)",
+                "+81 (Jepang)", "+82 (Korea)", "+86 (Tiongkok)", "+91 (India)",
+                "+44 (Inggris)", "+61 (Australia)"
         );
         kodeNegaraBox.setValue("+62 (Indonesia)");
 
         phoneTypeGroup.selectedToggleProperty().addListener((obs, old, nw) -> {
-            if (rbHP.isSelected()) {
-                phoneField.setPromptText("81234567890");
-            } else {
-                phoneField.setPromptText("211234567");
-            }
+            phoneField.setPromptText(rbHP.isSelected() ? "81234567890" : "211234567");
             phoneField.clear();
         });
 
@@ -91,43 +85,36 @@ public class ContactFormController {
         this.editContact = c;
         formTitle.setText("Edit Kontak");
 
+        // ✅ Kunci radio button tipe saat mode edit
+        rbPersonal.setDisable(true);
+        rbBisnis.setDisable(true);
+
         nameField.setText(c.getName());
 
         String fullPhone = c.getPhoneNumber() != null ? c.getPhoneNumber() : "";
         if (fullPhone.startsWith("+")) {
             int spaceIdx = fullPhone.indexOf(' ');
             if (spaceIdx > 0) {
-                String kode = fullPhone.substring(0, spaceIdx);
+                String kode  = fullPhone.substring(0, spaceIdx);
                 String nomor = fullPhone.substring(spaceIdx + 1);
                 for (String item : kodeNegaraBox.getItems()) {
-                    if (item.startsWith(kode + " ")) {
-                        kodeNegaraBox.setValue(item);
-                        break;
-                    }
+                    if (item.startsWith(kode + " ")) { kodeNegaraBox.setValue(item); break; }
                 }
-                if (nomor.startsWith("8") || nomor.startsWith("08")) {
-                    rbHP.setSelected(true);
-                } else {
-                    rbLokal.setSelected(true);
-                }
+                rbHP.setSelected(nomor.startsWith("8"));
+                rbLokal.setSelected(!rbHP.isSelected());
                 phoneField.setText(nomor);
             } else {
                 phoneField.setText(fullPhone);
             }
         } else {
-            if (fullPhone.startsWith("08")) {
-                rbHP.setSelected(true);
-                phoneField.setText(fullPhone.substring(1));
-            } else if (fullPhone.startsWith("0")) {
-                rbLokal.setSelected(true);
-                phoneField.setText(fullPhone.substring(1));
-            } else {
-                phoneField.setText(fullPhone);
-            }
+            phoneField.setText(fullPhone);
         }
+
         emailField.setText(c.getEmail() != null ? c.getEmail() : "");
         addressField.setText(c.getAddress() != null ? c.getAddress() : "");
-        kategoriBox.setValue(c.getCategory());
+
+        // ✅ Set kategori dari enum
+        kategoriBox.setValue(c.getCategoryName());
         favCheck.setSelected(c.isFavorite());
 
         if (c instanceof PersonalContact pc) {
@@ -143,56 +130,59 @@ public class ContactFormController {
         }
     }
 
-    public void setOnSaveCallback(Runnable cb) {
-        this.onSaveCallback = cb;
-    }
+    public void setOnSaveCallback(Runnable cb) { this.onSaveCallback = cb; }
 
     @FXML
     private void save() {
-        String name = nameField.getText().trim();
+        String name       = nameField.getText().trim();
         String phoneInput = phoneField.getText().trim();
         String kodeNegara = getKodeNegara();
-        boolean isHP = rbHP.isSelected();
+        boolean isHP      = rbHP.isSelected();
 
-        if (name.isEmpty()) { errorLabel.setText("Nama wajib diisi!"); return; }
+        if (name.isEmpty())       { errorLabel.setText("Nama wajib diisi!"); return; }
         if (phoneInput.isEmpty()) { errorLabel.setText("Nomor telepon wajib diisi!"); return; }
         if (!phoneInput.matches("\\d+")) {
-            errorLabel.setText("Nomor telepon hanya boleh berisi angka!");
-            return;
+            errorLabel.setText("Nomor telepon hanya boleh berisi angka!"); return;
         }
-
         if (isHP) {
             if (phoneInput.length() < 9 || phoneInput.length() > 12) {
-                errorLabel.setText("Nomor HP harus 9-12 digit tanpa angka 0 di depan! (contoh: 81234567890)");
-                return;
+                errorLabel.setText("Nomor HP harus 9-12 digit tanpa 0 di depan! (contoh: 81234567890)"); return;
             }
             if (!phoneInput.startsWith("8")) {
-                errorLabel.setText("Nomor HP harus diawali angka 8! (contoh: 81234567890)");
-                return;
+                errorLabel.setText("Nomor HP harus diawali angka 8!"); return;
             }
         } else {
             if (phoneInput.length() < 6 || phoneInput.length() > 11) {
-                errorLabel.setText("Nomor telepon lokal harus 6-11 digit! (contoh: 211234567)");
-                return;
+                errorLabel.setText("Nomor lokal harus 6-11 digit!"); return;
             }
         }
 
         String phone = kodeNegara + " " + phoneInput;
-
         String email = emailField.getText().trim();
         if (!email.isEmpty() && !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-            errorLabel.setText("Format email tidak valid!");
-            return;
+            errorLabel.setText("Format email tidak valid!"); return;
         }
 
         ContactManager cm = MainController.getContactManager();
 
+        // ✅ FIX no.5: Validasi duplikat nomor telepon
+        int excludeID = (editContact != null) ? editContact.getContactID() : -1;
+        if (cm.isPhoneDuplicate(phone, excludeID)) {
+            Optional<Contact> existing = cm.findByPhone(phone);
+            String namaExisting = existing.map(Contact::getName).orElse("kontak lain");
+            errorLabel.setText("Nomor ini sudah dipakai oleh \"" + namaExisting + "\"!");
+            return;
+        }
+
+        // ✅ Ambil kategori dari enum via fromString
+        ContactCategory kategori = ContactCategory.fromString(kategoriBox.getValue());
+
         if (editContact != null) {
             editContact.setName(name);
             editContact.setPhoneNumber(phone);
-            editContact.setEmail(emailField.getText().trim());
+            editContact.setEmail(email);
             editContact.setAddress(addressField.getText().trim());
-            editContact.setCategory(kategoriBox.getValue());
+            editContact.setCategory(kategori);
             editContact.setFavorite(favCheck.isSelected());
 
             if (editContact instanceof PersonalContact pc) {
@@ -205,6 +195,7 @@ public class ContactFormController {
                 bc.setWebsite(websiteField.getText().trim());
             }
             cm.updateContact(editContact);
+
         } else {
             Contact newContact;
             if (rbPersonal.isSelected()) {
@@ -222,9 +213,9 @@ public class ContactFormController {
             }
             newContact.setName(name);
             newContact.setPhoneNumber(phone);
-            newContact.setEmail(emailField.getText().trim());
+            newContact.setEmail(email);
             newContact.setAddress(addressField.getText().trim());
-            newContact.setCategory(kategoriBox.getValue());
+            newContact.setCategory(kategori);
             newContact.setFavorite(favCheck.isSelected());
             cm.addContact(newContact);
         }
@@ -233,25 +224,17 @@ public class ContactFormController {
         goBack();
     }
 
-    @FXML
-    private void cancel() {
-        goBack();
-    }
+    @FXML private void cancel() { goBack(); }
 
     private void goBack() {
         try {
             StackPane content = (StackPane) nameField.getScene().lookup("#contentArea");
             if (content != null) {
-                java.io.InputStream is = getClass().getResourceAsStream("/com/lizardcontact/fxml/Kontak.fxml");
-                if (is != null) {
-                    javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                            getClass().getResource("/com/lizardcontact/fxml/Kontak.fxml"));
-                    javafx.scene.Node page = loader.load();
-                    content.getChildren().setAll(page);
-                }
+                FXMLLoader loader = new FXMLLoader(
+                        getClass().getResource("/com/lizardcontact/fxml/Kontak.fxml"));
+                Node page = loader.load();
+                content.getChildren().setAll(page);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 }
