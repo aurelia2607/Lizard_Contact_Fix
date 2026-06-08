@@ -6,13 +6,13 @@ public class BusinessContact extends Contact {
     private String website;
 
     public BusinessContact() {
-        this.contactType = "Bisnis";
+        setContactType("Bisnis");
     }
 
-    public BusinessContact(String name, String phoneNumber, String email, String address, String category,
+    public BusinessContact(String name, String phoneNumber, String email, String address, ContactCategory category,
                            String company, String jobTitle, String website) {
         super(name, phoneNumber, email, address, category);
-        this.contactType = "Bisnis";
+        setContactType("Bisnis");
         this.company = company;
         this.jobTitle = jobTitle;
         this.website = website;
@@ -20,7 +20,7 @@ public class BusinessContact extends Contact {
 
     @Override
     public String getDisplayInfo() {
-        return "[Bisnis] " + name + (company != null && !company.isEmpty() ? " - " + company : "");
+        return "[Bisnis] " + getName() + (company != null && !company.isEmpty() ? " - " + company : "");
     }
 
     public String getCompany() { return company; }
