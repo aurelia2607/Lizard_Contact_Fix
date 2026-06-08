@@ -14,61 +14,66 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
 public class RegisterController {
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private TextField emailField;
-    @FXML
-    private PasswordField passwordField;
-    @FXML
-    private PasswordField confirmField;
-    @FXML
-    private Label errorLabel;
+    @FXML private TextField usernameField;
+    @FXML private TextField emailField;
+    @FXML private PasswordField passwordField;
+    @FXML private PasswordField confirmField;
+    @FXML private Label errorLabel;
+
+    private static final String EMAIL_REGEX = "^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$";
 
     @FXML
     private void register() {
-        String username = this.usernameField.getText().trim();
-        String email = this.emailField.getText().trim();
-        String password = this.passwordField.getText();
-        String confirm = this.confirmField.getText();
-        if (!username.isEmpty() && !password.isEmpty()) {
-            if (username.length() < 3) {
-                this.errorLabel.setText("Username minimal 3 karakter.");
-            } else if (!password.equals(confirm)) {
-                this.errorLabel.setText("Password tidak cocok!");
-            } else if (password.length() < 6) {
-                this.errorLabel.setText("Password minimal 6 karakter.");
-            } else {
-                boolean ok = DatabaseHelper.getInstance().register(username, password, email);
-                if (ok) {
-                    Alert alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Registrasi Berhasil");
-                    alert.setHeaderText((String)null);
-                    alert.setContentText("Akun berhasil dibuat! Silakan login.");
-                    alert.showAndWait();
-                    this.backToLogin();
-                } else {
-                    this.errorLabel.setText("Username sudah digunakan, coba yang lain.");
-                }
+        String username = usernameField.getText().trim();
+        String email    = emailField.getText().trim();
+        String password = passwordField.getText();
+        String confirm  = confirmField.getText();
 
-            }
+        if (username.isEmpty() || password.isEmpty()) {
+            errorLabel.setText("Username dan password wajib diisi!");
+            return;
+        }
+        if (username.length() < 3) {
+            errorLabel.setText("Username minimal 3 karakter.");
+            return;
+        }
+        if (!email.isEmpty() && !email.matches(EMAIL_REGEX)) {
+            errorLabel.setText("Format email tidak valid! (contoh: nama@email.com)");
+            return;
+        }
+        if (!password.equals(confirm)) {
+            errorLabel.setText("Password tidak cocok!");
+            return;
+        }
+        if (password.length() < 6) {
+            errorLabel.setText("Password minimal 6 karakter.");
+            return;
+        }
+
+        boolean ok = DatabaseHelper.getInstance().register(username, password, email);
+        if (ok) {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Registrasi Berhasil");
+            alert.setHeaderText(null);
+            alert.setContentText("Akun berhasil dibuat! Silakan login.");
+            alert.showAndWait();
+            backToLogin();
         } else {
-            this.errorLabel.setText("Username dan password wajib diisi!");
+            errorLabel.setText("Username sudah digunakan, coba yang lain.");
         }
     }
 
     @FXML
     private void backToLogin() {
         try {
-            Parent root = (Parent)FXMLLoader.load(this.getClass().getResource("/com/lizardcontact/fxml/Login.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/lizardcontact/fxml/Login.fxml"));
             Stage stage = MainApp.getPrimaryStage();
             stage.setScene(new Scene(root));
-            stage.setWidth((double)400.0F);
-            stage.setHeight((double)400.0F);
+            stage.setWidth(400);
+            stage.setHeight(400);
             stage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
