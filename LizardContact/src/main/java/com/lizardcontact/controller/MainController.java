@@ -24,6 +24,7 @@ public class MainController {
     @FXML private Button btnRiwayat;
 
     private static ContactManager contactManager = new ContactManager();
+    private static MainController instance;
 
     private Button activeBtn;
 
@@ -36,6 +37,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        instance = this;
         contactManager = new ContactManager();
         contactManager.loadContacts();
         showDashboard();
@@ -82,5 +84,9 @@ public class MainController {
 
     public static ContactManager getContactManager() {
         return contactManager;
+    }
+
+    public static MainController getInstance() {
+        return instance;
     }
 }
