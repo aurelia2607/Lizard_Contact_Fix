@@ -439,8 +439,8 @@ public class DatabaseHelper {
             int idx = 1;
             ps.setInt(idx++, userID);
             if (filterByAction) ps.setString(idx++, filterAction);
-            if (filterByFrom)   ps.setString(idx++, fromDate);
-            if (filterByTo)     ps.setString(idx++, toDate + " 23:59:59");
+            if (filterByFrom)   ps.setString(idx++, fromDate + "T00:00:00");
+            if (filterByTo)     ps.setString(idx++, toDate + "T23:59:59");
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {

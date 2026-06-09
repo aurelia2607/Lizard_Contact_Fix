@@ -222,14 +222,9 @@ public class ContactFormController {
     @FXML private void cancel() { goBack(); }
 
     private void goBack() {
-        try {
-            StackPane content = (StackPane) nameField.getScene().lookup("#contentArea");
-            if (content != null) {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/lizardcontact/fxml/Kontak.fxml"));
-                Node page = loader.load();
-                content.getChildren().setAll(page);
-            }
-        } catch (Exception e) { e.printStackTrace(); }
+        MainController mc = MainController.getInstance();
+        if (mc != null) {
+            mc.showKontak();
+        }
     }
 }
